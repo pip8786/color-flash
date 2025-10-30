@@ -2,6 +2,8 @@
 
 A React TypeScript web application for flashing colors on screen with customizable settings.
 
+**🌐 Live Demo:** [https://pip8786.github.io/color-flash/](https://pip8786.github.io/color-flash/)
+
 ## Features
 
 - **Color Configuration**: Choose from predefined colors (Green, Blue, Yellow, Red, Purple, Pink, Orange, Cyan)
