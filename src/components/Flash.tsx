@@ -33,21 +33,11 @@ export default function Flash() {
     }
   }, [encodedSettings, navigate]);
 
-  // Fullscreen and Wake Lock management
+  // Wake Lock management (no automatic fullscreen)
   useEffect(() => {
-    const enterFullscreen = async () => {
+    const requestWakeLock = async () => {
       try {
-        // Request fullscreen
-        if (document.documentElement.requestFullscreen) {
-          await document.documentElement.requestFullscreen();
-          setIsFullscreen(true);
-        }
-      } catch (error) {
-        console.warn("Fullscreen not supported or failed:", error);
-      }
-
-      try {
-        // Request wake lock
+        // Request wake lock only
         if ("wakeLock" in navigator) {
           const lock = await (navigator as any).wakeLock.request("screen");
           setWakeLock(lock);
@@ -62,20 +52,6 @@ export default function Flash() {
       }
     };
 
-    const exitFullscreenAndReleaseLock = () => {
-      // Exit fullscreen
-      if (document.fullscreenElement && document.exitFullscreen) {
-        document.exitFullscreen().catch(console.warn);
-      }
-      setIsFullscreen(false);
-
-      // Release wake lock
-      if (wakeLock) {
-        wakeLock.release();
-        setWakeLock(null);
-      }
-    };
-
     // Handle fullscreen change events
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
@@ -83,15 +59,25 @@ export default function Flash() {
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
 
-    // Enter fullscreen and request wake lock when component mounts
-    enterFullscreen();
+    // Only request wake lock when component mounts (no automatic fullscreen)
+    requestWakeLock();
 
     // Cleanup on unmount
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
-      exitFullscreenAndReleaseLock();
+      
+      // Exit fullscreen if active
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(console.warn);
+      }
+
+      // Release wake lock
+      if (wakeLock) {
+        wakeLock.release();
+        setWakeLock(null);
+      }
     };
-  }, [wakeLock]);
+  }, []);
 
   // Session timer
   useEffect(() => {
@@ -153,7 +139,9 @@ export default function Flash() {
     }, 3000);
   }, []);
 
-  const handleExit = useCallback(() => {
+  const handleExit = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent event bubbling to the screen tap handler
+    
     // Release wake lock before exit
     if (wakeLock) {
       wakeLock.release();
@@ -172,7 +160,8 @@ export default function Flash() {
     navigate("/");
   }, [navigate, settings, wakeLock]);
 
-  const toggleFullscreen = useCallback(async () => {
+  const toggleFullscreen = useCallback(async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent event bubbling to the screen tap handler
     try {
       if (!document.fullscreenElement) {
         await document.documentElement.requestFullscreen();
