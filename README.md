@@ -15,6 +15,7 @@ A React TypeScript web application for flashing colors on screen with customizab
   - Manual fullscreen toggle available during sessions
   - Colors fill the entire screen when in fullscreen mode
   - Fullscreen can be toggled via control button
+  - **iOS Support**: Uses CSS-based pseudo-fullscreen on iOS devices
 - **Screen Wake Lock**: Prevents screen from dimming or locking during flash sessions (on supported devices)
 - **Touch Controls**: Tap screen to reveal control buttons during flash sessions
 - **URL Sharing**: Each configuration generates a unique shareable URL
@@ -79,12 +80,15 @@ The built files will be in the `dist` directory, ready for static hosting.
 
 2. **Start Session**: Click "Start Flash Session" to begin
 
-3. **Full-Screen Mode**: The app automatically goes full-screen on mobile devices
+3. **Full-Screen Mode**: 
+   - **Desktop/Android**: Uses native browser fullscreen API
+   - **iOS**: Uses CSS-based pseudo-fullscreen (due to iOS Safari limitations)
+   - For best iOS experience: Add the page to your home screen for app-like behavior
 
 4. **Controls**: Tap the screen to reveal control buttons:
 
+   - **Fullscreen button**: Toggle fullscreen mode (⤢/⤓ on desktop, ⛶/↶ on iOS)
    - **Exit button (✕)**: Return to settings
-   - **Fullscreen button (⤢/⤓)**: Toggle fullscreen mode
 
 5. **Screen Wake Lock**: The app automatically prevents your screen from dimming or locking during sessions
 
