@@ -62,7 +62,7 @@ export default function Flash() {
         setWakeLock(null);
       }
     };
-  }, []);  // Session timer
+  }, []); // Session timer
   useEffect(() => {
     if (!settings || settings.isInfinite || timeRemaining === null) return;
 
@@ -154,12 +154,7 @@ export default function Flash() {
   const backgroundColor = isFlashing ? currentColor : "#000000";
 
   return (
-    <div
-      className="flash-screen"
-      style={{ backgroundColor }}
-      onClick={handleScreenTap}
-      onTouchStart={handleScreenTap}
-    >
+    <div className="flash-screen" style={{ backgroundColor }} onClick={handleScreenTap} onTouchStart={handleScreenTap}>
       {timeRemaining !== null && <div className="timer">{Math.max(0, timeRemaining)}s</div>}
 
       {showExit && (
