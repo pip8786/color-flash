@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ColorSettings } from "../types";
-import { decodeSettings, saveCurrentSettings } from "../utils";
+import { queryParamsToSettings, saveCurrentSettings } from "../utils";
 import "./Flash.css";
 
 export default function Flash() {
-  const { settings: encodedSettings } = useParams<{ settings: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [settings, setSettings] = useState<ColorSettings | null>(null);
   const [currentColorIndex, setCurrentColorIndex] = useState(0);
@@ -15,22 +15,21 @@ export default function Flash() {
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [wakeLock, setWakeLock] = useState<any>(null);
 
-  // Initialize settings
+  // Initialize settings from query parameters
   useEffect(() => {
-    if (encodedSettings) {
-      const decodedSettings = decodeSettings(encodedSettings);
-      if (decodedSettings) {
-        setSettings(decodedSettings);
-        if (!decodedSettings.isInfinite && decodedSettings.sessionDuration) {
-          setTimeRemaining(decodedSettings.sessionDuration);
-        }
-      } else {
-        navigate("/");
+    const params = new URLSearchParams(location.search);
+    const decodedSettings = queryParamsToSettings(params.toString());
+
+    if (decodedSettings) {
+      setSettings(decodedSettings);
+      if (!decodedSettings.isInfinite && decodedSettings.sessionDuration) {
+        setTimeRemaining(decodedSettings.sessionDuration);
       }
     } else {
+      // If no valid params, go back to home
       navigate("/");
     }
-  }, [encodedSettings, navigate]);
+  }, [location.search, navigate]);
 
   // Wake Lock management
   useEffect(() => {

@@ -18,14 +18,15 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.8);
   color: white;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 1.125rem;
-  font-weight: 600;
+  padding: 32px 48px;
+  border-radius: 50px;
+  font-size: 6rem;
+  font-weight: 700;
   font-family: monospace;
   z-index: 10001;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .controls-overlay {
@@ -66,10 +67,11 @@
 /* Mobile optimizations */
 @media (max-width: 480px) {
   .timer {
-    top: 16px;
-    right: 16px;
-    padding: 6px 12px;
-    font-size: 1rem;
+    top: 20px;
+    right: 20px;
+    padding: 40px 60px;
+    font-size: 8rem;
+    border-radius: 60px;
   }
 
   .control-button {

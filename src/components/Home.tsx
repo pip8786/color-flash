@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ColorSettings, DEFAULT_SETTINGS } from "../types";
-import { encodeSettings, getCurrentSettings, getHistory, saveCurrentSettings, saveToHistory } from "../utils";
+import { getCurrentSettings, getHistory, saveCurrentSettings, saveToHistory, settingsToQueryParams } from "../utils";
 import "./Home.css";
 
 const PREDEFINED_COLORS = [
@@ -74,8 +74,8 @@ export default function Home() {
     }
 
     saveToHistory(settings);
-    const encoded = encodeSettings(settings);
-    navigate(`/flash/${encoded}`);
+    const queryParams = settingsToQueryParams(settings);
+    navigate(`/?${queryParams}`);
   };
 
   const loadFromHistory = (historicalSettings: ColorSettings) => {
@@ -85,8 +85,8 @@ export default function Home() {
 
   const startFromHistory = (historicalSettings: ColorSettings) => {
     saveToHistory(historicalSettings);
-    const encoded = encodeSettings(historicalSettings);
-    navigate(`/flash/${encoded}`);
+    const queryParams = settingsToQueryParams(historicalSettings);
+    navigate(`/?${queryParams}`);
   };
 
   return (
