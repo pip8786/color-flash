@@ -80,7 +80,8 @@ The built files will be in the `dist` directory, ready for static hosting.
 
 2. **Start Session**: Click "Start Flash Session" to begin
 
-3. **Full-Screen Mode**: 
+3. **Full-Screen Mode**:
+
    - **Desktop/Android**: Uses native browser fullscreen API
    - **iOS**: Uses CSS-based pseudo-fullscreen (due to iOS Safari limitations)
    - For best iOS experience: Add the page to your home screen for app-like behavior
