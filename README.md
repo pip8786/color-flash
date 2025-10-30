@@ -9,12 +9,17 @@ A React TypeScript web application for flashing colors on screen with customizab
 - **Color Configuration**: Choose from predefined colors (Green, Blue, Yellow, Red, Purple, Pink, Orange, Cyan)
 - **Timing Controls**:
   - Flash duration (how long each color shows)
-  - Interval duration (pause between flashes)
+  - Interval duration (pause between flashes, can be set to 0 for continuous flashing)
   - Session duration (finite or infinite sessions)
-- **Full-Screen Experience**: Colors fill the entire screen on mobile devices
-- **Touch Controls**: Tap screen to reveal exit button during flash sessions
+- **Full-Screen Experience**: 
+  - Automatically enters fullscreen mode during flash sessions
+  - Manual fullscreen toggle available during sessions
+  - Colors fill the entire screen on all devices
+- **Screen Wake Lock**: Prevents screen from dimming or locking during flash sessions (on supported devices)
+- **Touch Controls**: Tap screen to reveal control buttons during flash sessions
 - **URL Sharing**: Each configuration generates a unique shareable URL
 - **Local Storage**: Automatically saves last 10 configurations for quick access
+- **Settings Persistence**: Your last settings are automatically restored when returning to the app
 - **Mobile-First Design**: Optimized for mobile with responsive layout
 
 ## Technology Stack
@@ -76,9 +81,13 @@ The built files will be in the `dist` directory, ready for static hosting.
 
 3. **Full-Screen Mode**: The app automatically goes full-screen on mobile devices
 
-4. **Exit**: Tap the screen to reveal the exit button (×) and return to settings
+4. **Controls**: Tap the screen to reveal control buttons:
+   - **Exit button (✕)**: Return to settings
+   - **Fullscreen button (⤢/⤓)**: Toggle fullscreen mode
 
-5. **History**: Recently used configurations are saved automatically and can be reloaded
+5. **Screen Wake Lock**: The app automatically prevents your screen from dimming or locking during sessions
+
+6. **History**: Recently used configurations are saved automatically and can be reloaded or started immediately
 
 ## Deployment
 

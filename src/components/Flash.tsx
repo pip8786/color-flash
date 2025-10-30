@@ -13,6 +13,8 @@ export default function Flash() {
   const [isFlashing, setIsFlashing] = useState(false);
   const [showExit, setShowExit] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [wakeLock, setWakeLock] = useState<any>(null);
 
   // Initialize settings
   useEffect(() => {
@@ -30,6 +32,66 @@ export default function Flash() {
       navigate("/");
     }
   }, [encodedSettings, navigate]);
+
+  // Fullscreen and Wake Lock management
+  useEffect(() => {
+    const enterFullscreen = async () => {
+      try {
+        // Request fullscreen
+        if (document.documentElement.requestFullscreen) {
+          await document.documentElement.requestFullscreen();
+          setIsFullscreen(true);
+        }
+      } catch (error) {
+        console.warn("Fullscreen not supported or failed:", error);
+      }
+
+      try {
+        // Request wake lock
+        if ("wakeLock" in navigator) {
+          const lock = await (navigator as any).wakeLock.request("screen");
+          setWakeLock(lock);
+
+          // Listen for wake lock release
+          lock.addEventListener("release", () => {
+            console.log("Screen Wake Lock was released");
+          });
+        }
+      } catch (error) {
+        console.warn("Wake Lock not supported or failed:", error);
+      }
+    };
+
+    const exitFullscreenAndReleaseLock = () => {
+      // Exit fullscreen
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(console.warn);
+      }
+      setIsFullscreen(false);
+
+      // Release wake lock
+      if (wakeLock) {
+        wakeLock.release();
+        setWakeLock(null);
+      }
+    };
+
+    // Handle fullscreen change events
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+    // Enter fullscreen and request wake lock when component mounts
+    enterFullscreen();
+
+    // Cleanup on unmount
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      exitFullscreenAndReleaseLock();
+    };
+  }, [wakeLock]);
 
   // Session timer
   useEffect(() => {
@@ -92,12 +154,35 @@ export default function Flash() {
   }, []);
 
   const handleExit = useCallback(() => {
+    // Release wake lock before exit
+    if (wakeLock) {
+      wakeLock.release();
+      setWakeLock(null);
+    }
+
+    // Exit fullscreen before navigation
+    if (document.fullscreenElement && document.exitFullscreen) {
+      document.exitFullscreen().catch(console.warn);
+    }
+
     // Save current settings before navigating back
     if (settings) {
       saveCurrentSettings(settings);
     }
     navigate("/");
-  }, [navigate, settings]);
+  }, [navigate, settings, wakeLock]);
+
+  const toggleFullscreen = useCallback(async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    } catch (error) {
+      console.warn("Fullscreen toggle failed:", error);
+    }
+  }, []);
 
   if (!settings) {
     return null;
@@ -111,9 +196,14 @@ export default function Flash() {
       {timeRemaining !== null && <div className="timer">{Math.max(0, timeRemaining)}s</div>}
 
       {showExit && (
-        <button className="exit-button" onClick={handleExit} aria-label="Exit flash session">
-          ✕
-        </button>
+        <div className="controls-overlay">
+          <button className="control-button fullscreen-button" onClick={toggleFullscreen} aria-label="Toggle fullscreen">
+            {isFullscreen ? "⤓" : "⤢"}
+          </button>
+          <button className="control-button exit-button" onClick={handleExit} aria-label="Exit flash session">
+            ✕
+          </button>
+        </div>
       )}
     </div>
   );
