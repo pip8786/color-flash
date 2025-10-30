@@ -13,9 +13,7 @@ export default function Flash() {
   const [isFlashing, setIsFlashing] = useState(false);
   const [showExit, setShowExit] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [wakeLock, setWakeLock] = useState<any>(null);
-  const [isIOS, setIsIOS] = useState(false);
 
   // Initialize settings
   useEffect(() => {
@@ -34,12 +32,8 @@ export default function Flash() {
     }
   }, [encodedSettings, navigate]);
 
-  // Wake Lock management (no automatic fullscreen)
+  // Wake Lock management
   useEffect(() => {
-    // Detect iOS
-    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    setIsIOS(iOS);
-
     const requestWakeLock = async () => {
       try {
         // Request wake lock only
@@ -57,34 +51,18 @@ export default function Flash() {
       }
     };
 
-    // Handle fullscreen change events
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
-
-    // Only request wake lock when component mounts (no automatic fullscreen)
+    // Only request wake lock when component mounts
     requestWakeLock();
 
     // Cleanup on unmount
     return () => {
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
-
-      // Exit fullscreen if active
-      if (document.fullscreenElement && document.exitFullscreen) {
-        document.exitFullscreen().catch(console.warn);
-      }
-
       // Release wake lock
       if (wakeLock) {
         wakeLock.release();
         setWakeLock(null);
       }
     };
-  }, []);
-
-  // Session timer
+  }, []);  // Session timer
   useEffect(() => {
     if (!settings || settings.isInfinite || timeRemaining === null) return;
 
@@ -168,37 +146,6 @@ export default function Flash() {
     [navigate, settings, wakeLock]
   );
 
-  const toggleFullscreen = useCallback(
-    async (e: React.MouseEvent) => {
-      e.stopPropagation(); // Prevent event bubbling to the screen tap handler
-
-      if (isIOS) {
-        // iOS fallback: Toggle CSS-based pseudo-fullscreen
-        setIsFullscreen((prev) => !prev);
-
-        // On iOS, we can encourage users to use "Add to Home Screen" for better fullscreen experience
-        if (!isFullscreen) {
-          // Show a brief instruction for iOS users
-          console.log("iOS detected: For best fullscreen experience, add this page to your home screen");
-        }
-      } else {
-        // Standard fullscreen API for other browsers
-        try {
-          if (!document.fullscreenElement) {
-            await document.documentElement.requestFullscreen();
-          } else {
-            await document.exitFullscreen();
-          }
-        } catch (error) {
-          console.warn("Fullscreen toggle failed:", error);
-          // Fallback to CSS-based fullscreen if standard API fails
-          setIsFullscreen((prev) => !prev);
-        }
-      }
-    },
-    [isIOS, isFullscreen]
-  );
-
   if (!settings) {
     return null;
   }
@@ -208,7 +155,7 @@ export default function Flash() {
 
   return (
     <div
-      className={`flash-screen ${isFullscreen ? "pseudo-fullscreen" : ""}`}
+      className="flash-screen"
       style={{ backgroundColor }}
       onClick={handleScreenTap}
       onTouchStart={handleScreenTap}
@@ -217,13 +164,6 @@ export default function Flash() {
 
       {showExit && (
         <div className="controls-overlay">
-          <button
-            className="control-button fullscreen-button"
-            onClick={toggleFullscreen}
-            aria-label="Toggle fullscreen"
-          >
-            {isIOS ? (isFullscreen ? "↶" : "⛶") : isFullscreen ? "⤓" : "⤢"}
-          </button>
           <button className="control-button exit-button" onClick={handleExit} aria-label="Exit flash session">
             ✕
           </button>

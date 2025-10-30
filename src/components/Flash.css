@@ -14,43 +14,6 @@
   transition: background-color 0ms;
 }
 
-/* Pseudo-fullscreen for iOS and fallback */
-.flash-screen.pseudo-fullscreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 999999;
-  /* Hide iOS Safari UI */
-  -webkit-overflow-scrolling: touch;
-  overflow: hidden;
-  /* Use safe area insets on iOS */
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-}
-
-/* Additional iOS-specific styles */
-@supports (-webkit-touch-callout: none) {
-  .flash-screen.pseudo-fullscreen {
-    /* iOS-specific fullscreen enhancements */
-    height: 100vh;
-    height: -webkit-fill-available;
-  }
-}
-
-/* Hide scrollbars in pseudo-fullscreen */
-.pseudo-fullscreen::-webkit-scrollbar {
-  display: none;
-}
-
-.pseudo-fullscreen {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
 .timer {
   position: absolute;
   top: 20px;
@@ -100,10 +63,6 @@
   transform: scale(0.95);
 }
 
-.fullscreen-button {
-  font-size: 1.5rem;
-}
-
 /* Mobile optimizations */
 @media (max-width: 480px) {
   .timer {
@@ -117,10 +76,6 @@
     width: 90px;
     height: 90px;
     font-size: 2.2rem;
-  }
-
-  .fullscreen-button {
-    font-size: 1.3rem;
   }
 
   .controls-overlay {
