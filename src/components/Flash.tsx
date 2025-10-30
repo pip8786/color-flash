@@ -197,7 +197,11 @@ export default function Flash() {
 
       {showExit && (
         <div className="controls-overlay">
-          <button className="control-button fullscreen-button" onClick={toggleFullscreen} aria-label="Toggle fullscreen">
+          <button
+            className="control-button fullscreen-button"
+            onClick={toggleFullscreen}
+            aria-label="Toggle fullscreen"
+          >
             {isFullscreen ? "⤓" : "⤢"}
           </button>
           <button className="control-button exit-button" onClick={handleExit} aria-label="Exit flash session">

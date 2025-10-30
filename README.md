@@ -11,7 +11,7 @@ A React TypeScript web application for flashing colors on screen with customizab
   - Flash duration (how long each color shows)
   - Interval duration (pause between flashes, can be set to 0 for continuous flashing)
   - Session duration (finite or infinite sessions)
-- **Full-Screen Experience**: 
+- **Full-Screen Experience**:
   - Automatically enters fullscreen mode during flash sessions
   - Manual fullscreen toggle available during sessions
   - Colors fill the entire screen on all devices
@@ -82,6 +82,7 @@ The built files will be in the `dist` directory, ready for static hosting.
 3. **Full-Screen Mode**: The app automatically goes full-screen on mobile devices
 
 4. **Controls**: Tap the screen to reveal control buttons:
+
    - **Exit button (✕)**: Return to settings
    - **Fullscreen button (⤢/⤓)**: Toggle fullscreen mode
 
