@@ -80,6 +80,25 @@ export default function Flash() {
     return () => clearInterval(timer);
   }, [settings, timeRemaining, navigate]);
 
+  // Helper function to get random color index that's different from current
+  const getRandomColorIndex = useCallback((currentIndex: number, totalColors: number) => {
+    if (totalColors <= 1) return 0;
+
+    let newIndex;
+    do {
+      newIndex = Math.floor(Math.random() * totalColors);
+    } while (newIndex === currentIndex);
+
+    return newIndex;
+  }, []);
+
+  // Function to manually advance to next random color
+  const flashNextColor = useCallback(() => {
+    if (!settings || settings.colors.length === 0) return;
+    setCurrentColorIndex((prev) => getRandomColorIndex(prev, settings.colors.length));
+    setIsFlashing(true);
+  }, [settings, getRandomColorIndex]);
+
   // Color flashing logic
   useEffect(() => {
     if (!settings || settings.colors.length === 0) return;
@@ -93,12 +112,12 @@ export default function Flash() {
         if (settings.intervalDuration > 0) {
           setIsFlashing(false);
           setTimeout(() => {
-            // Move to next color after interval
-            setCurrentColorIndex((prev) => (prev + 1) % settings.colors.length);
+            // Move to random color after interval
+            setCurrentColorIndex((prev) => getRandomColorIndex(prev, settings.colors.length));
           }, settings.intervalDuration);
         } else {
-          // No interval, immediately move to next color
-          setCurrentColorIndex((prev) => (prev + 1) % settings.colors.length);
+          // No interval, immediately move to random color
+          setCurrentColorIndex((prev) => getRandomColorIndex(prev, settings.colors.length));
         }
       }, settings.flashDuration);
     };
@@ -110,7 +129,7 @@ export default function Flash() {
     const interval = setInterval(flashCycle, settings.flashDuration + settings.intervalDuration);
 
     return () => clearInterval(interval);
-  }, [settings]);
+  }, [settings, getRandomColorIndex]);
 
   const handleScreenTap = useCallback(() => {
     setShowExit(true);
