@@ -92,13 +92,6 @@ export default function Flash() {
     return newIndex;
   }, []);
 
-  // Function to manually advance to next random color
-  const flashNextColor = useCallback(() => {
-    if (!settings || settings.colors.length === 0) return;
-    setCurrentColorIndex((prev) => getRandomColorIndex(prev, settings.colors.length));
-    setIsFlashing(true);
-  }, [settings, getRandomColorIndex]);
-
   // Color flashing logic
   useEffect(() => {
     if (!settings || settings.colors.length === 0) return;
