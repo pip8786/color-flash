@@ -52,16 +52,16 @@ export const decodeSettings = (encoded: string): ColorSettings | null => {
 export const settingsToQueryParams = (settings: ColorSettings): string => {
   const params = new URLSearchParams();
 
-  // Colors as letters: g=green, b=blue, y=yellow, r=red, p=purple, k=pink, o=orange, c=cyan
+  // Colors as letters: b=blue, w=white, r=red, y=yellow, o=orange, g=green, p=pink, k=black
   const colorMap: { [key: string]: string } = {
-    "#22c55e": "g", // green
     "#3b82f6": "b", // blue
-    "#eab308": "y", // yellow
+    "#ffffff": "w", // white
     "#ef4444": "r", // red
-    "#a855f7": "p", // purple
-    "#ec4899": "k", // pink
+    "#eab308": "y", // yellow
     "#f97316": "o", // orange
-    "#06b6d4": "c", // cyan
+    "#22c55e": "g", // green
+    "#ec4899": "p", // pink
+    "#000000": "k", // black
   };
 
   const colorLetters = settings.colors
@@ -91,14 +91,14 @@ export const queryParamsToSettings = (queryString: string): ColorSettings | null
 
     // Color mapping
     const colorMap: { [key: string]: string } = {
-      g: "#22c55e", // green
       b: "#3b82f6", // blue
-      y: "#eab308", // yellow
+      w: "#ffffff", // white
       r: "#ef4444", // red
-      p: "#a855f7", // purple
-      k: "#ec4899", // pink
+      y: "#eab308", // yellow
       o: "#f97316", // orange
-      c: "#06b6d4", // cyan
+      g: "#22c55e", // green
+      p: "#ec4899", // pink
+      k: "#000000", // black
     };
 
     const colorLetters = params.get("c") || "";

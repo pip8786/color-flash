@@ -6,7 +6,7 @@ export interface ColorSettings {
   isInfinite: boolean;
 }
 
-export const DEFAULT_COLORS = ["#22c55e", "#3b82f6", "#eab308", "#ef4444"]; // Green, Blue, Yellow, Red
+export const DEFAULT_COLORS = ["#3b82f6", "#ffffff", "#ef4444", "#eab308"]; // Blue, White, Red, Yellow
 
 export const DEFAULT_SETTINGS: ColorSettings = {
   colors: DEFAULT_COLORS,
